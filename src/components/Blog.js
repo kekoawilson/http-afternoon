@@ -1,45 +1,51 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import Formated from './subcomponents/Formated';
+import axios from 'axios';
 
-// import axios
-
-class Blog extends Component{
-    constructor(){
+class Blog extends Component {
+    constructor() {
         super();
         this.state = {
             blog: {}
         }
     }
 
-    // insert componentWillMount method
+    componentWillMount() {
+        let promise = axios.get(`/api/blog/${this.props.match.params.id}`)
+        promise.then(result => {
+            this.setState({
+                blog: result.data
+            })
+        })
+    }
 
-    
-    render(){
+
+    render() {
         const blog = this.state.blog;
-        return(
-            
+        return (
+
             <div className='content blog-content' >
-                    <div className="blog-img" style={{backgroundImage: `url(${blog.image})`, backgroundSize:'cover'}}>
-                        <h1>{blog.title}</h1>
-                    </div>
+                <div className="blog-img" style={{ backgroundImage: `url(${blog.image})`, backgroundSize: 'cover' }}>
+                    <h1>{blog.title}</h1>
+                </div>
                 <div className="blog-container">
                     <h2>{blog.subTitle}</h2>
-                    <br/>
+                    <br />
                     {
                         blog.name
-                        ?
-                        <h3>{blog.name}</h3>
-                        :
-                        null
+                            ?
+                            <h3>{blog.name}</h3>
+                            :
+                            null
                     }
-                    <hr/><br/>
-                    {<Formated text={blog.text}/>}
+                    <hr /><br />
+                    {<Formated text={blog.text} />}
                 </div>
                 <Link to={`/edit/${blog.id}`} >
-                <button>Edit</button>
+                    <button>Edit</button>
                 </Link>
-                <br/>
+                <br />
             </div>
         )
     }
